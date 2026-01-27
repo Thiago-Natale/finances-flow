@@ -27,7 +27,11 @@ interface MovimentacaoFinanceira {
   data_movimentacao: string;
   descricao: string | null;
   created_at: string;
-  categorias_financeiras?: CategoriaFinanceira;
+  categorias_financeiras?: {
+    id: string;
+    nome: string;
+    tipo: 'entrada' | 'saida';
+  } | null;
 }
 
 interface DashboardData {
