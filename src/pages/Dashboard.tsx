@@ -1,5 +1,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
+import { ExpenseChart } from '@/components/dashboard/ExpenseChart';
+import { ComparisonChart } from '@/components/dashboard/ComparisonChart';
 import { useDashboardData, formatCurrency, useMovimentacoes } from '@/hooks/useFinancialData';
 import { useAuth } from '@/contexts/AuthContext';
 import { Wallet, TrendingUp, TrendingDown, ArrowUpDown, Loader2 } from 'lucide-react';
@@ -64,8 +66,18 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div style={{ animationDelay: '0.4s' }}>
+          <ExpenseChart />
+        </div>
+        <div style={{ animationDelay: '0.5s' }}>
+          <ComparisonChart />
+        </div>
+      </div>
+
       {/* Recent Transactions */}
-      <div className="glass-card p-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+      <div className="glass-card p-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-foreground">Últimas Movimentações</h2>
           <Link
