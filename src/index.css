@@ -250,12 +250,12 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     background: var(--gradient-primary);
     opacity: 0.1;
     border-radius: 50%;
-    transform: translate(30%, -30%);
+    transform: translate(40%, -40%);
   }
 
   /* Navigation Item */

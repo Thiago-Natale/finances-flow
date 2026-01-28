@@ -15,7 +15,7 @@ export function ComparisonChart() {
     if (entradas === 0 && saidas === 0) return [];
     
     return [
-      { name: 'Entradas', value: entradas, color: 'hsl(142, 76%, 36%)' },
+      { name: 'Entradas', value: entradas, color: 'hsl(var(--success))' },
       { name: 'Saídas', value: saidas, color: 'hsl(var(--destructive))' },
     ];
   }, [dashboard]);
