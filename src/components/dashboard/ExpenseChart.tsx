@@ -122,8 +122,8 @@ export function ExpenseChart() {
 
   if (isLoading) {
     return (
-      <div className="glass-card p-6">
-        <div className="flex items-center justify-center h-[300px]">
+      <div className="glass-card p-4 sm:p-6">
+        <div className="flex items-center justify-center h-[250px] sm:h-[300px]">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </div>
@@ -131,12 +131,12 @@ export function ExpenseChart() {
   }
 
   return (
-    <div className="glass-card p-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <h2 className="text-xl font-semibold text-foreground">Distribuição Financeira</h2>
-        <div className="flex flex-wrap gap-3">
+    <div className="glass-card p-4 sm:p-6 animate-fade-in">
+      <div className="flex flex-col gap-4 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground">Distribuição Financeira</h2>
+        <div className="flex flex-col xs:flex-row gap-2 sm:gap-3">
           <Select value={filterType} onValueChange={(v: FilterType) => setFilterType(v)}>
-            <SelectTrigger className="w-[140px] bg-secondary/50">
+            <SelectTrigger className="w-full xs:w-[140px] bg-secondary/50 text-sm">
               <SelectValue placeholder="Tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -147,7 +147,7 @@ export function ExpenseChart() {
           </Select>
           
           <Select value={period} onValueChange={(v: PeriodType) => setPeriod(v)}>
-            <SelectTrigger className="w-[160px] bg-secondary/50">
+            <SelectTrigger className="w-full xs:w-[160px] bg-secondary/50 text-sm">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
             <SelectContent>
@@ -162,13 +162,13 @@ export function ExpenseChart() {
       </div>
 
       {filteredData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
-          <p>Nenhuma movimentação encontrada</p>
-          <p className="text-sm">para o período selecionado</p>
+        <div className="flex flex-col items-center justify-center h-[200px] sm:h-[300px] text-muted-foreground">
+          <p className="text-sm sm:text-base">Nenhuma movimentação encontrada</p>
+          <p className="text-xs sm:text-sm">para o período selecionado</p>
         </div>
       ) : (
         <>
-          <div className="h-[300px]">
+          <div className="h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -177,8 +177,8 @@ export function ExpenseChart() {
                   cy="50%"
                   labelLine={false}
                   label={renderCustomLabel}
-                  outerRadius={120}
-                  innerRadius={60}
+                  outerRadius="80%"
+                  innerRadius="45%"
                   fill="#8884d8"
                   dataKey="value"
                   animationBegin={0}
@@ -194,18 +194,19 @@ export function ExpenseChart() {
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend 
+                  wrapperStyle={{ fontSize: '12px' }}
                   formatter={(value) => (
-                    <span className="text-sm text-foreground">{value}</span>
+                    <span className="text-xs sm:text-sm text-foreground">{value}</span>
                   )}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-border/50">
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Total:</span>
-              <span className={`text-lg font-bold ${
+              <span className="text-sm text-muted-foreground">Total:</span>
+              <span className={`text-base sm:text-lg font-bold ${
                 filterType === 'entrada' ? 'money-positive' : 
                 filterType === 'saida' ? 'money-negative' : 'text-foreground'
               }`}>

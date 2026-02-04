@@ -27,17 +27,17 @@ export default function Dashboard() {
   return (
     <AppLayout>
       {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <h1 className="text-3xl font-bold text-foreground">
+      <div className="mb-6 sm:mb-8 animate-fade-in">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
           Olá, {usuario?.nome_completo?.split(' ')[0] || 'Usuário'}!
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-sm sm:text-base text-muted-foreground mt-1">
           Aqui está um resumo das suas finanças
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <StatCard
             title="Saldo Total"
@@ -55,7 +55,7 @@ export default function Dashboard() {
             subtitle="Entradas do mês atual"
           />
         </div>
-        <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <div className="animate-fade-in sm:col-span-2 lg:col-span-1" style={{ animationDelay: '0.3s' }}>
           <StatCard
             title="Gastos do Mês"
             value={formatCurrency(dashboard?.gastosMes || 0)}
@@ -67,7 +67,7 @@ export default function Dashboard() {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div style={{ animationDelay: '0.4s' }}>
           <ExpenseChart />
         </div>
@@ -77,12 +77,12 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Transactions */}
-      <div className="glass-card p-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-foreground">Últimas Movimentações</h2>
+      <div className="glass-card p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-semibold text-foreground">Últimas Movimentações</h2>
           <Link
             to="/movimentacoes"
-            className="text-primary hover:underline text-sm font-medium"
+            className="text-primary hover:underline text-xs sm:text-sm font-medium"
           >
             Ver todas
           </Link>
@@ -94,8 +94,8 @@ export default function Dashboard() {
           </div>
         ) : recentMovimentacoes.length === 0 ? (
           <div className="text-center py-8">
-            <ArrowUpDown className="w-12 h-12 mx-auto text-muted-foreground/50 mb-3" />
-            <p className="text-muted-foreground">Nenhuma movimentação registrada</p>
+            <ArrowUpDown className="w-10 sm:w-12 h-10 sm:h-12 mx-auto text-muted-foreground/50 mb-3" />
+            <p className="text-sm sm:text-base text-muted-foreground">Nenhuma movimentação registrada</p>
             <Link
               to="/movimentacoes"
               className="text-primary hover:underline text-sm font-medium mt-2 inline-block"
@@ -104,35 +104,35 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {recentMovimentacoes.map((mov, index) => (
               <div
                 key={mov.id}
-                className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors animate-slide-in"
+                className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors animate-slide-in"
                 style={{ animationDelay: `${0.1 * index}s` }}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 ${
                     mov.categorias_financeiras?.tipo === 'entrada'
                       ? 'bg-success/20 text-success'
                       : 'bg-destructive/20 text-destructive'
                   }`}>
                     {mov.categorias_financeiras?.tipo === 'entrada' ? (
-                      <TrendingUp className="w-5 h-5" />
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                     ) : (
-                      <TrendingDown className="w-5 h-5" />
+                      <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
                     )}
                   </div>
-                  <div>
-                    <p className="font-medium text-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground text-sm sm:text-base truncate">
                       {mov.descricao || mov.categorias_financeiras?.nome || 'Movimentação'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                       {mov.categorias_financeiras?.nome} • {new Date(mov.data_movimentacao).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                 </div>
-                <p className={`font-semibold ${
+                <p className={`font-semibold text-sm sm:text-base shrink-0 ml-2 ${
                   mov.categorias_financeiras?.tipo === 'entrada'
                     ? 'money-positive'
                     : 'money-negative'
