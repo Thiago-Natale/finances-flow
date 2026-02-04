@@ -42,7 +42,7 @@ export function MobileNav() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
             <TrendingUp className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-foreground">FinanceApp</span>
+          <span className="font-semibold text-foreground">ControlaAi</span>
         </Link>
 
         <Sheet open={open} onOpenChange={setOpen}>
