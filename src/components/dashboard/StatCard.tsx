@@ -34,16 +34,16 @@ export function StatCard({ title, value, icon: Icon, variant = 'default', subtit
 
   return (
     <div className="stat-card">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground mb-1">{title}</p>
-          <p className={`text-2xl font-bold ${getValueStyles()}`}>{value}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-1">{title}</p>
+          <p className={`text-xl sm:text-2xl font-bold ${getValueStyles()} truncate`}>{value}</p>
           {subtitle && (
-            <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
+            <p className="text-xs text-muted-foreground mt-1 truncate">{subtitle}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getIconStyles()} flex items-center justify-center`}>
-          <Icon className="w-6 h-6" />
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${getIconStyles()} flex items-center justify-center shrink-0`}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </div>
     </div>
