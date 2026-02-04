@@ -18,7 +18,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <MobileNav />
       
       {/* Main Content */}
-      <main className="lg:ml-64 pt-20 lg:pt-0 p-4 sm:p-6 lg:p-8">
+      <main className="lg:ml-64 pt-24 lg:pt-0 p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>

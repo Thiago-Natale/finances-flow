@@ -105,7 +105,7 @@ export default function Movimentacoes() {
   return (
     <AppLayout>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8 animate-fade-in">
+      <div className="flex-col items-center justify-between mb-8 animate-fade-in">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Movimentações</h1>
           <p className="text-muted-foreground mt-1">
@@ -115,7 +115,7 @@ export default function Movimentacoes() {
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="btn-gradient" disabled={!categorias?.length}>
+            <Button className="btn-gradient mt-8" disabled={!categorias?.length}>
               <Plus className="w-5 h-5 mr-2" />
               Nova Movimentação
             </Button>
@@ -262,7 +262,7 @@ export default function Movimentacoes() {
             {movimentacoes?.map((mov, index) => (
               <div
                 key={mov.id}
-                className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors animate-slide-in"
+                className="flex-col items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors animate-slide-in"
                 style={{ animationDelay: `${0.05 * index}s` }}
               >
                 <div className="flex items-center gap-4">
@@ -296,7 +296,7 @@ export default function Movimentacoes() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex justify-between items-center gap-4">
                   <p className={`text-lg font-bold ${
                     mov.categorias_financeiras?.tipo === 'entrada'
                       ? 'money-positive'
