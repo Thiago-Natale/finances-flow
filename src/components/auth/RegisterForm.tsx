@@ -63,20 +63,7 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      // Check if login is unique
-      const { data: existingLogin } = await supabase
-        .from('usuarios')
-        .select('id')
-        .eq('login', formData.login)
-        .maybeSingle();
-
-      if (existingLogin) {
-        setErrors({ login: 'Este login já está em uso' });
-        setLoading(false);
-        return;
-      }
-
-      // Create auth user
+      // Create auth user first
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email.trim(),
         password: formData.password,
@@ -100,6 +87,7 @@ export function RegisterForm() {
       }
 
       // Create user profile in usuarios table
+      // The UNIQUE constraints on login and email will prevent duplicates at DB level
       const { error: profileError } = await supabase
         .from('usuarios')
         .insert({
@@ -112,15 +100,30 @@ export function RegisterForm() {
         });
 
       if (profileError) {
-        // Rollback: delete auth user if profile creation fails
-        await supabase.auth.admin?.deleteUser?.(authData.user.id);
-        toast.error('Erro ao criar perfil: ' + profileError.message);
+        // Handle specific constraint violations
+        if (profileError.code === '23505') {
+          // Unique constraint violation
+          if (profileError.message.includes('login')) {
+            setErrors({ login: 'Este login já está em uso' });
+            toast.error('Este login já está em uso');
+          } else if (profileError.message.includes('email')) {
+            toast.error('Este e-mail já está cadastrado');
+          } else {
+            toast.error('Dados duplicados detectados');
+          }
+        } else {
+          toast.error('Erro ao criar perfil. Por favor, entre em contato com o suporte.');
+        }
+        // Note: Auth user may exist without profile - user should try logging in
+        // or contact support. We cannot delete auth users from client-side.
+        console.error('Profile creation error:', profileError.message);
         return;
       }
 
       toast.success('Conta criada com sucesso! Bem-vindo!');
       navigate('/dashboard');
     } catch (error) {
+      console.error('Registration error:', error);
       toast.error('Erro inesperado ao criar conta');
     } finally {
       setLoading(false);
