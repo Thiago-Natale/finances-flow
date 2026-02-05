@@ -30,7 +30,7 @@ export function Sidebar() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
             <TrendingUp className="w-6 h-6 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-lg text-foreground">ControlaAi</span>
+          <span className="font-semibold text-lg text-foreground">Controla Aí</span>
         </Link>
       </div>
 
