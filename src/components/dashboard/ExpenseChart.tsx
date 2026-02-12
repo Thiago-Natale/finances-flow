@@ -8,6 +8,7 @@ import {
   Legend,
 } from "recharts";
 import { useMovimentacoes, formatCurrency } from "@/hooks/useFinancialData";
+import { useEmprestimos } from "@/hooks/useEmprestimos";
 import {
   Select,
   SelectContent,
@@ -40,6 +41,7 @@ type PeriodType =
 
 export function ExpenseChart() {
   const { data: movimentacoes, isLoading } = useMovimentacoes();
+  const { data: emprestimos } = useEmprestimos();
   const [filterType, setFilterType] = useState<FilterType>("saida");
   const [period, setPeriod] = useState<PeriodType>("current-month");
 
@@ -99,11 +101,78 @@ export function ExpenseChart() {
       {} as Record<string, number>,
     );
 
+    // Add empréstimos to chart
+    if (emprestimos && (filterType === 'saida' || filterType === 'all')) {
+      emprestimos.forEach((emp) => {
+        if (emp.status === 'pendente') {
+          const empDate = new Date(emp.data_criacao);
+          const empMonth = empDate.getMonth();
+          const empYear = empDate.getFullYear();
+          let inPeriod = false;
+          switch (period) {
+            case "current-month":
+              inPeriod = empMonth === currentMonth && empYear === currentYear;
+              break;
+            case "last-month":
+              const lm = currentMonth === 0 ? 11 : currentMonth - 1;
+              const lmy = currentMonth === 0 ? currentYear - 1 : currentYear;
+              inPeriod = empMonth === lm && empYear === lmy;
+              break;
+            case "last-3-months":
+              inPeriod = empDate >= new Date(currentYear, currentMonth - 2, 1);
+              break;
+            case "last-6-months":
+              inPeriod = empDate >= new Date(currentYear, currentMonth - 5, 1);
+              break;
+            case "year":
+              inPeriod = empYear === currentYear;
+              break;
+          }
+          if (inPeriod) {
+            grouped["Empréstimos"] = (grouped["Empréstimos"] || 0) + Number(emp.valor);
+          }
+        }
+      });
+    }
+
+    if (emprestimos && (filterType === 'entrada' || filterType === 'all')) {
+      emprestimos.forEach((emp) => {
+        if (emp.status === 'pago' && emp.updated_at) {
+          const paidDate = new Date(emp.updated_at);
+          const paidMonth = paidDate.getMonth();
+          const paidYear = paidDate.getFullYear();
+          let inPeriod = false;
+          switch (period) {
+            case "current-month":
+              inPeriod = paidMonth === currentMonth && paidYear === currentYear;
+              break;
+            case "last-month":
+              const lm = currentMonth === 0 ? 11 : currentMonth - 1;
+              const lmy = currentMonth === 0 ? currentYear - 1 : currentYear;
+              inPeriod = paidMonth === lm && paidYear === lmy;
+              break;
+            case "last-3-months":
+              inPeriod = paidDate >= new Date(currentYear, currentMonth - 2, 1);
+              break;
+            case "last-6-months":
+              inPeriod = paidDate >= new Date(currentYear, currentMonth - 5, 1);
+              break;
+            case "year":
+              inPeriod = paidYear === currentYear;
+              break;
+          }
+          if (inPeriod) {
+            grouped["Empréstimos (Pagos)"] = (grouped["Empréstimos (Pagos)"] || 0) + Number(emp.valor);
+          }
+        }
+      });
+    }
+
     // Convert to array for chart
     return Object.entries(grouped)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [movimentacoes, filterType, period]);
+  }, [movimentacoes, emprestimos, filterType, period]);
 
   const total = useMemo(() => {
     return filteredData.reduce((sum, item) => sum + item.value, 0);
