@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import PerfilFinanceiro from "./pages/PerfilFinanceiro";
 import Categorias from "./pages/Categorias";
 import Movimentacoes from "./pages/Movimentacoes";
+import EmprestimosPage from "./pages/Emprestimos";
 import MinhaConta from "./pages/MinhaConta";
 import NotFound from "./pages/NotFound";
 
@@ -46,6 +47,11 @@ const App = () => (
             <Route path="/movimentacoes" element={
               <ProtectedRoute>
                 <Movimentacoes />
+              </ProtectedRoute>
+            } />
+            <Route path="/emprestimos" element={
+              <ProtectedRoute>
+                <EmprestimosPage />
               </ProtectedRoute>
             } />
             <Route path="/minha-conta" element={

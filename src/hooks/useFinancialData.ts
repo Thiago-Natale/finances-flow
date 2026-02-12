@@ -39,6 +39,7 @@ interface DashboardData {
   ganhosMes: number;
   gastosMes: number;
   saldoInicial: number;
+  emprestimosPendentes: number;
 }
 
 export function usePerfilFinanceiro() {
@@ -118,7 +119,7 @@ export function useDashboardData() {
     queryKey: ['dashboard', user?.id],
     queryFn: async (): Promise<DashboardData> => {
       if (!user?.id) {
-        return { saldoTotal: 0, ganhosMes: 0, gastosMes: 0, saldoInicial: 0 };
+        return { saldoTotal: 0, ganhosMes: 0, gastosMes: 0, saldoInicial: 0, emprestimosPendentes: 0 };
       }
 
       // Get perfil financeiro for saldo_inicial
@@ -140,6 +141,12 @@ export function useDashboardData() {
             tipo
           )
         `)
+        .eq('usuario_id', user.id);
+
+      // Get emprestimos
+      const { data: emprestimos } = await supabase
+        .from('emprestimos')
+        .select('valor, status, data_criacao, updated_at')
         .eq('usuario_id', user.id);
 
       // Calculate totals
@@ -169,6 +176,34 @@ export function useDashboardData() {
         }
       });
 
+      // Calculate emprestimos pendentes total
+      let emprestimosPendentes = 0;
+      emprestimos?.forEach((emp) => {
+        const valor = Number(emp.valor);
+        if (emp.status === 'pendente') {
+          emprestimosPendentes += valor;
+          // Pendente = saída (subtrai do saldo)
+          totalSaidas += valor;
+          const dataCriacao = new Date(emp.data_criacao);
+          if (dataCriacao.getMonth() === currentMonth && dataCriacao.getFullYear() === currentYear) {
+            gastosMes += valor;
+          }
+        } else if (emp.status === 'pago') {
+          // Pago = o valor volta (entrada)
+          totalEntradas += valor;
+          // Also count as saída when it was created
+          totalSaidas += valor;
+          const updatedAt = emp.updated_at ? new Date(emp.updated_at) : new Date();
+          if (updatedAt.getMonth() === currentMonth && updatedAt.getFullYear() === currentYear) {
+            ganhosMes += valor;
+          }
+          const dataCriacao = new Date(emp.data_criacao);
+          if (dataCriacao.getMonth() === currentMonth && dataCriacao.getFullYear() === currentYear) {
+            gastosMes += valor;
+          }
+        }
+      });
+
       const saldoTotal = saldoInicial + totalEntradas - totalSaidas;
 
       return {
@@ -176,6 +211,7 @@ export function useDashboardData() {
         ganhosMes,
         gastosMes,
         saldoInicial,
+        emprestimosPendentes,
       };
     },
     enabled: !!user?.id,

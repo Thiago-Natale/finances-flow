@@ -46,6 +46,50 @@ export type Database = {
           },
         ]
       }
+      emprestimos: {
+        Row: {
+          created_at: string | null
+          data_criacao: string
+          data_pagamento: string | null
+          id: string
+          nome: string
+          status: Database["public"]["Enums"]["status_emprestimo"]
+          updated_at: string | null
+          usuario_id: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string | null
+          data_criacao?: string
+          data_pagamento?: string | null
+          id?: string
+          nome: string
+          status?: Database["public"]["Enums"]["status_emprestimo"]
+          updated_at?: string | null
+          usuario_id: string
+          valor: number
+        }
+        Update: {
+          created_at?: string | null
+          data_criacao?: string
+          data_pagamento?: string | null
+          id?: string
+          nome?: string
+          status?: Database["public"]["Enums"]["status_emprestimo"]
+          updated_at?: string | null
+          usuario_id?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emprestimos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       movimentacoes_financeiras: {
         Row: {
           categoria_id: string
@@ -170,6 +214,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      status_emprestimo: "pendente" | "pago"
       tipo_categoria: "entrada" | "saida"
     }
     CompositeTypes: {
@@ -298,6 +343,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      status_emprestimo: ["pendente", "pago"],
       tipo_categoria: ["entrada", "saida"],
     },
   },

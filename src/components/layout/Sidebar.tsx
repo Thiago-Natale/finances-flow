@@ -7,7 +7,8 @@ import {
   ArrowUpDown, 
   User, 
   LogOut,
-  TrendingUp
+  TrendingUp,
+  Handshake
 } from 'lucide-react';
 
 const navItems = [
@@ -15,6 +16,7 @@ const navItems = [
   { to: '/perfil-financeiro', icon: Wallet, label: 'Perfil Financeiro' },
   { to: '/categorias', icon: Tags, label: 'Categorias' },
   { to: '/movimentacoes', icon: ArrowUpDown, label: 'Movimentações' },
+  { to: '/emprestimos', icon: Handshake, label: 'Empréstimos' },
   { to: '/minha-conta', icon: User, label: 'Minha Conta' },
 ];
 

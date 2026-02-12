@@ -4,7 +4,7 @@ import { ExpenseChart } from '@/components/dashboard/ExpenseChart';
 import { ComparisonChart } from '@/components/dashboard/ComparisonChart';
 import { useDashboardData, formatCurrency, useMovimentacoes } from '@/hooks/useFinancialData';
 import { useAuth } from '@/contexts/AuthContext';
-import { Wallet, TrendingUp, TrendingDown, ArrowUpDown, Loader2 } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, ArrowUpDown, Loader2, Handshake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -37,7 +37,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
           <StatCard
             title="Saldo Total"
@@ -55,13 +55,26 @@ export default function Dashboard() {
             subtitle="Entradas do mês atual"
           />
         </div>
-        <div className="animate-fade-in sm:col-span-2 lg:col-span-1" style={{ animationDelay: '0.3s' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <StatCard
             title="Gastos do Mês"
             value={formatCurrency(dashboard?.gastosMes || 0)}
             icon={TrendingDown}
             variant="danger"
             subtitle="Saídas do mês atual"
+          />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <StatCard
+            title="Empréstimos"
+            value={formatCurrency(dashboard?.emprestimosPendentes || 0)}
+            icon={Handshake}
+            variant={(dashboard?.emprestimosPendentes || 0) > 0 ? 'danger' : 'default'}
+            subtitle={
+              (dashboard?.emprestimosPendentes || 0) > 0
+                ? 'Pendentes de pagamento'
+                : 'Nenhum pendente'
+            }
           />
         </div>
       </div>
