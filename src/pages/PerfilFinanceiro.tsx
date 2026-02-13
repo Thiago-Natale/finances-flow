@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { usePerfilFinanceiro, formatCurrency } from '@/hooks/useFinancialData';
+import { useDiaFechamentoPadrao, useUpdateDiaFechamentoPadrao } from '@/hooks/useContasRecorrentes';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Wallet, Save, Loader2 } from 'lucide-react';
+import { Wallet, Save, Loader2, CalendarClock } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function PerfilFinanceiro() {
   const { user } = useAuth();
   const { data: perfil, isLoading } = usePerfilFinanceiro();
+  const { data: diaFechamentoPadrao } = useDiaFechamentoPadrao();
+  const updateDiaMutation = useUpdateDiaFechamentoPadrao();
   const [rendaMensal, setRendaMensal] = useState('');
   const [saldoInicial, setSaldoInicial] = useState('');
+  const [diaFechamento, setDiaFechamento] = useState('');
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
 
@@ -23,7 +27,10 @@ export default function PerfilFinanceiro() {
       setRendaMensal(String(perfil.renda_mensal || ''));
       setSaldoInicial(String(perfil.saldo_inicial || ''));
     }
-  }, [perfil]);
+    if (diaFechamentoPadrao) {
+      setDiaFechamento(String(diaFechamentoPadrao));
+    }
+  }, [perfil, diaFechamentoPadrao]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +44,7 @@ export default function PerfilFinanceiro() {
         .update({
           renda_mensal: parseFloat(rendaMensal) || 0,
           saldo_inicial: parseFloat(saldoInicial) || 0,
+          dia_fechamento_padrao: Math.max(1, Math.min(31, parseInt(diaFechamento) || 1)),
         })
         .eq('id', perfil.id);
 
@@ -45,6 +53,7 @@ export default function PerfilFinanceiro() {
       toast.success('Perfil financeiro atualizado!');
       queryClient.invalidateQueries({ queryKey: ['perfil-financeiro'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['dia-fechamento-padrao'] });
     } catch (error) {
       toast.error('Erro ao salvar perfil financeiro');
     } finally {
@@ -133,6 +142,27 @@ export default function PerfilFinanceiro() {
               </div>
               <p className="text-xs text-muted-foreground">
                 Seu saldo atual antes de começar a registrar movimentações
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fechamento" className="text-foreground/80 flex items-center gap-2">
+                <CalendarClock className="w-4 h-4" />
+                Data de Fechamento Padrão
+              </Label>
+              <Input
+                id="fechamento"
+                type="number"
+                min="1"
+                max="31"
+                placeholder="1"
+                value={diaFechamento}
+                onChange={(e) => setDiaFechamento(e.target.value)}
+                className="glass-input"
+                disabled={saving}
+              />
+              <p className="text-xs text-muted-foreground">
+                Dia do mês em que as contas recorrentes serão registradas como saída
               </p>
             </div>
 
