@@ -13,6 +13,7 @@ import PerfilFinanceiro from "./pages/PerfilFinanceiro";
 import Categorias from "./pages/Categorias";
 import Movimentacoes from "./pages/Movimentacoes";
 import EmprestimosPage from "./pages/Emprestimos";
+import ContasRecorrentes from "./pages/ContasRecorrentes";
 import MinhaConta from "./pages/MinhaConta";
 import NotFound from "./pages/NotFound";
 
@@ -52,6 +53,11 @@ const App = () => (
             <Route path="/emprestimos" element={
               <ProtectedRoute>
                 <EmprestimosPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/contas-recorrentes" element={
+              <ProtectedRoute>
+                <ContasRecorrentes />
               </ProtectedRoute>
             } />
             <Route path="/minha-conta" element={

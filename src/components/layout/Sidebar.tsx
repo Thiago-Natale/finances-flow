@@ -8,7 +8,8 @@ import {
   User, 
   LogOut,
   TrendingUp,
-  Handshake
+  Handshake,
+  CalendarClock
 } from 'lucide-react';
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { to: '/categorias', icon: Tags, label: 'Categorias' },
   { to: '/movimentacoes', icon: ArrowUpDown, label: 'Movimentações' },
   { to: '/emprestimos', icon: Handshake, label: 'Empréstimos' },
+  { to: '/contas-recorrentes', icon: CalendarClock, label: 'Contas Recorrentes' },
   { to: '/minha-conta', icon: User, label: 'Minha Conta' },
 ];
 

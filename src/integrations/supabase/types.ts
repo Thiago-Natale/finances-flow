@@ -46,6 +46,72 @@ export type Database = {
           },
         ]
       }
+      contas_recorrentes: {
+        Row: {
+          ativo: boolean
+          categoria_id: string
+          created_at: string | null
+          data_inicio: string
+          descricao: string | null
+          dia_fechamento: number
+          id: string
+          is_assinatura: boolean
+          nome: string
+          parcelas_pagas: number
+          quantidade_parcelas: number | null
+          updated_at: string | null
+          usuario_id: string
+          valor_total: number
+        }
+        Insert: {
+          ativo?: boolean
+          categoria_id: string
+          created_at?: string | null
+          data_inicio?: string
+          descricao?: string | null
+          dia_fechamento?: number
+          id?: string
+          is_assinatura?: boolean
+          nome: string
+          parcelas_pagas?: number
+          quantidade_parcelas?: number | null
+          updated_at?: string | null
+          usuario_id: string
+          valor_total: number
+        }
+        Update: {
+          ativo?: boolean
+          categoria_id?: string
+          created_at?: string | null
+          data_inicio?: string
+          descricao?: string | null
+          dia_fechamento?: number
+          id?: string
+          is_assinatura?: boolean
+          nome?: string
+          parcelas_pagas?: number
+          quantidade_parcelas?: number | null
+          updated_at?: string | null
+          usuario_id?: string
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_categoria"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_financeiras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_usuario"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emprestimos: {
         Row: {
           created_at: string | null
@@ -93,28 +159,34 @@ export type Database = {
       movimentacoes_financeiras: {
         Row: {
           categoria_id: string
+          conta_recorrente_id: string | null
           created_at: string | null
           data_movimentacao: string
           descricao: string | null
           id: string
+          parcela_numero: number | null
           usuario_id: string
           valor: number
         }
         Insert: {
           categoria_id: string
+          conta_recorrente_id?: string | null
           created_at?: string | null
           data_movimentacao?: string
           descricao?: string | null
           id?: string
+          parcela_numero?: number | null
           usuario_id: string
           valor: number
         }
         Update: {
           categoria_id?: string
+          conta_recorrente_id?: string | null
           created_at?: string | null
           data_movimentacao?: string
           descricao?: string | null
           id?: string
+          parcela_numero?: number | null
           usuario_id?: string
           valor?: number
         }
@@ -124,6 +196,13 @@ export type Database = {
             columns: ["categoria_id"]
             isOneToOne: false
             referencedRelation: "categorias_financeiras"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "movimentacoes_financeiras_conta_recorrente_id_fkey"
+            columns: ["conta_recorrente_id"]
+            isOneToOne: false
+            referencedRelation: "contas_recorrentes"
             referencedColumns: ["id"]
           },
           {
@@ -138,6 +217,7 @@ export type Database = {
       perfil_financeiro: {
         Row: {
           created_at: string | null
+          dia_fechamento_padrao: number
           id: string
           renda_mensal: number | null
           saldo_inicial: number | null
@@ -146,6 +226,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          dia_fechamento_padrao?: number
           id?: string
           renda_mensal?: number | null
           saldo_inicial?: number | null
@@ -154,6 +235,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          dia_fechamento_padrao?: number
           id?: string
           renda_mensal?: number | null
           saldo_inicial?: number | null
